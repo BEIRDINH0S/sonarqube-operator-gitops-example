@@ -1,0 +1,16 @@
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeProject
+metadata:
+  name: demo-project
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  key: demo-project
+  name: Demo Project
+  visibility: private
+  mainBranch: main
+  qualityGateRef: strict
+  ciToken:
+    enabled: true
+    secretName: demo-project-ci-token

@@ -1,0 +1,39 @@
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeInstance
+metadata:
+  name: sonarqube
+  namespace: sonarqube
+spec:
+  edition: community
+  version: "10.3"
+
+  database:
+    host: postgres
+    port: 5432
+    name: sonarqube
+    secretRef: sonar-db-secret
+
+  adminSecretRef: sonar-admin
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "500m"
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+
+  persistence:
+    size: "10Gi"
+    extensionsSize: "2Gi"
+    # storageClass omitted → uses the cluster default. Set explicitly in prod.
+
+  jvmOptions: "-Xmx2g -Xms512m"
+
+  # Uncomment to expose SonarQube via Ingress. Requires an ingress controller
+  # in the cluster (NGINX, Traefik, ...). The operator generates the Ingress
+  # resource itself — no separate manifest needed.
+  # ingress:
+  #   enabled: true
+  #   host: sonarqube.example.com
+  #   ingressClassName: nginx

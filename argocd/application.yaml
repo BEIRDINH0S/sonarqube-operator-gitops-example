@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sonarqube
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BEIRDINH0S/sonarqube-operator-gitops-example
+    targetRevision: main
+    path: apps/sonarqube
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sonarqube
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      # Operator CRs reconcile asynchronously against an external system (the
+      # SonarQube API). Health checks may flap during initial provisioning;
+      # this option tells Argo CD to retry rather than mark the app degraded.
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

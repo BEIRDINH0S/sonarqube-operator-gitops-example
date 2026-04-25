@@ -1,0 +1,23 @@
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeQualityGate
+metadata:
+  name: strict
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  name: strict
+  isDefault: false
+  conditions:
+    - metric: coverage
+      operator: LT
+      value: "80"
+    - metric: new_reliability_rating
+      operator: GT
+      value: "1"
+    - metric: new_security_rating
+      operator: GT
+      value: "1"
+    - metric: new_duplicated_lines_density
+      operator: GT
+      value: "3"

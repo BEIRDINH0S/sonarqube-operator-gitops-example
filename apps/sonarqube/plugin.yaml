@@ -1,0 +1,10 @@
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubePlugin
+metadata:
+  name: scmgit
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  key: scmgit
+  version: "1.13.0.2445"

@@ -1,0 +1,15 @@
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeUser
+metadata:
+  name: ci-bot
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  login: ci-bot
+  name: CI Bot
+  email: ci-bot@example.com
+  passwordSecretRef:
+    name: ci-bot-password
+  groups:
+    - sonar-users
