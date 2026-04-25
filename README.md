@@ -57,7 +57,7 @@ apps/sonarqube/
 ├── 01-postgres.yaml       # demo PostgreSQL backend (replace in prod)
 ├── 02-secrets.yaml        # placeholder secrets — see "Secrets" below
 ├── instance.yaml          # SonarQubeInstance — the SonarQube install
-├── plugin.yaml            # SonarQubePlugin — install the Git SCM plugin
+├── plugin.yaml            # SonarQubePlugin — install the Mercurial SCM plugin
 ├── quality-gate.yaml      # SonarQubeQualityGate — coverage > 80%, etc.
 ├── project.yaml           # SonarQubeProject — uses the quality gate
 └── user.yaml              # SonarQubeUser — a CI bot account
