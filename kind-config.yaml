@@ -1,0 +1,24 @@
+# kind cluster config for this example. Maps ports 80/443 from the node container
+# to the host so an Ingress controller running inside the cluster is reachable
+# from your machine. The "ingress-ready=true" label is the selector used by the
+# kind nginx-ingress manifest to schedule the controller on this node.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      # High ports to avoid conflicts with Windows HTTP.sys reservations and
+      # whatever else may already be bound. Adjust to 80/443 if you have them
+      # free — the URLs in the README change accordingly.
+      - containerPort: 80
+        hostPort: 30080
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 30443
+        protocol: TCP

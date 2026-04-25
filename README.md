@@ -10,7 +10,12 @@ You commit YAML  ──►  Argo CD syncs  ──►  Operator reconciles  ─�
 
 ## Prerequisites
 
-- A Kubernetes cluster (kind, minikube, or real)
+- A Kubernetes cluster with an ingress controller. For local testing on kind,
+  use the included [`kind-config.yaml`](kind-config.yaml):
+  ```bash
+  kind create cluster --name sonarqube --config kind-config.yaml --image kindest/node:v1.31.0
+  kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+  ```
 - [`sonarqube-operator`](https://github.com/BEIRDINH0S/sonarqube-operator) installed
   (e.g. `helm install sonarqube-operator ./charts/sonarqube-operator -n sonarqube-operator-system --create-namespace`)
 - [Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/) installed in
@@ -18,13 +23,28 @@ You commit YAML  ──►  Argo CD syncs  ──►  Operator reconciles  ─�
 
 ## Bootstrap
 
-One-time, point Argo CD at this repo:
+One-time, apply the contents of [`argocd/`](argocd/) — the Application that points
+Argo CD at this repo, plus the Ingress for the Argo CD UI itself:
 
 ```bash
-kubectl apply -f argocd/application.yaml
+kubectl apply -f argocd/
 ```
 
-That's it. From now on, every commit to this repo flows to your cluster.
+From now on, every commit to this repo flows to your cluster.
+
+## Accessing the services
+
+If you used the bundled `kind-config.yaml`, the cluster's ingress controller is
+exposed on host ports `30080` (HTTP) and `30443` (HTTPS). On a real cluster,
+adjust the URLs to your ingress's address.
+
+| Service     | URL                                       | Credentials |
+|-------------|-------------------------------------------|-------------|
+| SonarQube   | http://sonarqube.localtest.me:30080       | `admin` / value of `sonar-admin` Secret |
+| Argo CD UI  | https://argocd.localtest.me:30443         | `admin` / `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' \| base64 -d` |
+
+> `localtest.me` is a public DNS record that resolves to `127.0.0.1`, so the URLs
+> above work without editing your hosts file.
 
 ## What's in here
 
@@ -55,14 +75,8 @@ the box. **Do not use these values in production.** For real deployments use one
 The operator only reads `Secret` objects in the cluster — it does not care how they got
 there. So any of the above tools slot in cleanly.
 
-## Exposing SonarQube via Ingress
+## How the SonarQube Ingress is exposed
 
-The `SonarQubeInstance` CRD has a built-in `ingress` block (see commented section in
-[`instance.yaml`](apps/sonarqube/instance.yaml)). Set `enabled: true`, give it a host
-and an `ingressClassName`, and the operator generates the Ingress resource for you —
-no separate manifest needed.
-
-For local clusters (kind/minikube), install an ingress controller first:
-```bash
-kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
-```
+`SonarQubeInstance` has a built-in `ingress` block — the operator creates the
+Ingress resource for you, no separate manifest needed. See the `ingress:` section
+in [`instance.yaml`](apps/sonarqube/instance.yaml).

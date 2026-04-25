@@ -30,10 +30,11 @@ spec:
 
   jvmOptions: "-Xmx2g -Xms512m"
 
-  # Uncomment to expose SonarQube via Ingress. Requires an ingress controller
-  # in the cluster (NGINX, Traefik, ...). The operator generates the Ingress
-  # resource itself — no separate manifest needed.
-  # ingress:
-  #   enabled: true
-  #   host: sonarqube.example.com
-  #   ingressClassName: nginx
+  # The operator generates the Ingress resource itself — no separate manifest
+  # needed. Requires an ingress controller (NGINX, Traefik, ...) in the cluster.
+  # `localtest.me` is a public DNS that resolves to 127.0.0.1, so it works on
+  # any local cluster without editing /etc/hosts.
+  ingress:
+    enabled: true
+    host: sonarqube.localtest.me
+    ingressClassName: nginx
