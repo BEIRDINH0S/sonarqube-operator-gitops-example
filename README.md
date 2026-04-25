@@ -38,13 +38,16 @@ If you used the bundled `kind-config.yaml`, the cluster's ingress controller is
 exposed on host ports `30080` (HTTP) and `30443` (HTTPS). On a real cluster,
 adjust the URLs to your ingress's address.
 
-| Service     | URL                                       | Credentials |
-|-------------|-------------------------------------------|-------------|
-| SonarQube   | http://sonarqube.localtest.me:30080       | `admin` / value of `sonar-admin` Secret |
-| Argo CD UI  | https://argocd.localtest.me:30443         | `admin` / `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' \| base64 -d` |
+| Service     | URL                                            | Credentials |
+|-------------|------------------------------------------------|-------------|
+| SonarQube   | http://sonarqube.127.0.0.1.nip.io:30080        | `admin` / value of `sonar-admin` Secret |
+| Argo CD UI  | https://argocd.127.0.0.1.nip.io:30443          | `admin` / `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' \| base64 -d` |
 
-> `localtest.me` is a public DNS record that resolves to `127.0.0.1`, so the URLs
-> above work without editing your hosts file.
+> [`nip.io`](https://nip.io) is a wildcard DNS that resolves
+> `<anything>.<ip>.nip.io` to `<ip>`, **IPv4 only**. We use it instead of
+> `localtest.me` (which also returns `::1` AAAA records) because Docker Desktop
+> on Windows only publishes ports on IPv4, and some browsers fail to fall back
+> from IPv6 to IPv4 fast enough.
 
 ## What's in here
 

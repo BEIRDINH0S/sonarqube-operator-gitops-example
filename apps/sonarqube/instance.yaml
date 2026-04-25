@@ -32,9 +32,10 @@ spec:
 
   # The operator generates the Ingress resource itself — no separate manifest
   # needed. Requires an ingress controller (NGINX, Traefik, ...) in the cluster.
-  # `localtest.me` is a public DNS that resolves to 127.0.0.1, so it works on
-  # any local cluster without editing /etc/hosts.
+  # `nip.io` is a public DNS that returns only an A record for the embedded IP
+  # (127.0.0.1 here) — strictly IPv4, which avoids browsers trying ::1 first
+  # against a Docker Desktop port that's only bound on IPv4.
   ingress:
     enabled: true
-    host: sonarqube.localtest.me
+    host: sonarqube.127.0.0.1.nip.io
     ingressClassName: nginx
