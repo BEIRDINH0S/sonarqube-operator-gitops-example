@@ -1,10 +1,13 @@
+# SCM Git is bundled into SonarQube 10.x core, so it cannot be installed
+# via the marketplace API. We use the Mercurial SCM plugin here just to
+# demonstrate SonarQubePlugin against a real marketplace artifact.
 apiVersion: sonarqube.sonarqube.io/v1alpha1
 kind: SonarQubePlugin
 metadata:
-  name: scmgit
+  name: scmmercurial
   namespace: sonarqube
 spec:
   instanceRef:
     name: sonarqube
-  key: scmgit
-  version: "1.13.0.2445"
+  key: scmmercurial
+  version: "1.1.2"
