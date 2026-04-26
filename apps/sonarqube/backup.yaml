@@ -1,0 +1,27 @@
+# SonarQubeBackup is admission-only today — the CronJob materialisation is
+# tracked as sonarqube-operator issue #59. Once that lands the operator will
+# create a CronJob owned by this CR; no spec change required here.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarqube-backups
+  namespace: sonarqube
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeBackup
+metadata:
+  name: nightly
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  schedule: "0 2 * * *"
+  retention: 7
+  destination:
+    pvc:
+      claimName: sonarqube-backups

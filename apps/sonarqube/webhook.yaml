@@ -1,0 +1,28 @@
+# Project-scoped webhook. SonarQube POSTs an analysis-finished payload here
+# every time a scanner run completes for sonarqube-operator. Useful for
+# pushing the result into a chat channel or kicking off a downstream job.
+#
+# The payload is HMAC-signed with the secret in `sonar-webhook-secret` so the
+# receiver can verify the request actually came from this SonarQube.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sonar-webhook-secret
+  namespace: sonarqube
+type: Opaque
+stringData:
+  secret: changeme-webhook-hmac-secret
+---
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeWebhook
+metadata:
+  name: ci-notify
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  name: ci-notify
+  url: https://example.com/sonarqube-webhook
+  projectKey: sonarqube-operator
+  secretRef:
+    name: sonar-webhook-secret

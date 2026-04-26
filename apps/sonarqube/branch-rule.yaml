@@ -1,0 +1,16 @@
+# SonarQubeBranchRule is admission-only today — the CR is accepted and the
+# operator records the spec, but the actual /api/new_code_periods/set call
+# is tracked as sonarqube-operator issue #58. The CR will reconcile
+# automatically once that lands, no spec change required.
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeBranchRule
+metadata:
+  name: sonarqube-operator-main
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  projectKey: sonarqube-operator
+  branch: main
+  newCodePeriod:
+    mode: previous_version
