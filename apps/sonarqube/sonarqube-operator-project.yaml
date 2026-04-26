@@ -1,0 +1,29 @@
+# Project that the GitHub Actions workflow on BEIRDINH0S/sonarqube-operator
+# scans against. The operator generates a CI token and stores it in the Secret
+# named below — extract it once and put it into the GitHub repo secrets as
+# SONAR_TOKEN. See the README for the full workflow.
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubeProject
+metadata:
+  name: sonarqube-operator
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  key: sonarqube-operator
+  name: SonarQube Operator
+  visibility: public
+  mainBranch: main
+  qualityGateRef: strict
+  tags:
+    - go
+    - kubernetes
+    - operator
+  links:
+    - name: Homepage
+      url: https://github.com/BEIRDINH0S/sonarqube-operator
+    - name: Issues
+      url: https://github.com/BEIRDINH0S/sonarqube-operator/issues
+  ciToken:
+    enabled: true
+    secretName: sonarqube-operator-ci-token

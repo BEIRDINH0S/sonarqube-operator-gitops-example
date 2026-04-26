@@ -1,0 +1,16 @@
+# Permission template applied automatically to projects whose key matches the
+# pattern. The grants themselves (who gets what permission) are still managed
+# in the SonarQube UI today — see sonarqube-operator issue #62 for the
+# spec.permissions[] follow-up.
+apiVersion: sonarqube.sonarqube.io/v1alpha1
+kind: SonarQubePermissionTemplate
+metadata:
+  name: default-template
+  namespace: sonarqube
+spec:
+  instanceRef:
+    name: sonarqube
+  name: default-template
+  description: Default template applied to every new project
+  projectKeyPattern: ".*"
+  isDefault: true
